@@ -9,8 +9,7 @@ using System.Net.Http;
 using System.Web.Http;
 
 namespace SongHub.Controllers
-{
-   
+{   
 
     [Authorize]
     public class AttendancesController : ApiController
