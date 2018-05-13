@@ -2,6 +2,7 @@
 using SongHub.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -25,7 +26,9 @@ namespace SongHub.Controllers.Api
         public IHttpActionResult Cancel(int id)
         {
             var userId = User.Identity.GetUserId();
-            var gig = _context.Gigs.Single(g => g.Id == id && g.ArtistId == userId);
+            var gig = _context.Gigs
+                .Include(g=> g.Attendances.Select(a=>a.Attendee)) // In order to remove getting list of attendees
+                .Single(g => g.Id == id && g.ArtistId == userId);
 
             if (gig.IsCanceled)
                 return NotFound();
@@ -33,20 +36,15 @@ namespace SongHub.Controllers.Api
             gig.IsCanceled = true;
 
             //Send notification
-            var notification = new Notification
-            {
-                DateTime = DateTime.Now,
-                Gig = gig,
-                Type = NotificationType.GigCanceled
-            };
+            var notification = new Notification(NotificationType.GigCanceled, gig);
 
-            var attendees = _context.Attendences
+            /*var attendees = _context.Attendences
                 .Where(a => a.GigId == gig.Id)
                 .Select(a => a.Attendee)
                 .ToList();
 
-
-            foreach(var attendee in attendees)
+            */
+            foreach (var attendee in gig.Attendances.Select(a => a.Attendee))
             {
                 attendee.Notify(notification);
             }

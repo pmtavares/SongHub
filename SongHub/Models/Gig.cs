@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace SongHub.Models
@@ -23,5 +25,12 @@ namespace SongHub.Models
         public Genre Genre { get; set; }
         [Required]
         public byte GenreId { get; set; }
+
+        public ICollection<Attendance> Attendances { get; private set; }
+
+        public Gig()
+        {
+            Attendances = new Collection<Attendance>();
+        }
     }
 }
