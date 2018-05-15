@@ -33,7 +33,7 @@ namespace SongHub.Models
         {
             modelBuilder.Entity<Attendance>()
                 .HasRequired(a => a.Gig)
-                .WithMany()
+                .WithMany(g=> g.Attendances)
                 .WillCascadeOnDelete(false); //Turn off cascade delete
 
             modelBuilder.Entity<ApplicationUser>()
@@ -56,7 +56,7 @@ namespace SongHub.Models
              * */
             modelBuilder.Entity<UserNotification>()
                 .HasRequired(n => n.User)
-                .WithMany()
+                .WithMany(u=> u.UserNotifications)
                 .WillCascadeOnDelete(false);
 
             base.OnModelCreating(modelBuilder);        
