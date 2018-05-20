@@ -38,11 +38,25 @@ namespace SongHub.Models
         {
             IsCanceled = true;
             //Send notification
-            var notification = new Notification(NotificationType.GigCanceled, this);
+            var notification = Notification.GigCancel(this);
 
             foreach (var attendee in Attendances.Select(a => a.Attendee))
             {
                 attendee.Notify(notification);
+            }
+        }
+
+        public void Modify(DateTime dateTime, string venue, byte genre)
+        {
+            var notiffication = Notification.GigUpdate(this, DateTime, Venue);
+            
+            Venue = venue;
+            DateTime = dateTime;
+            GenreId = genre;
+
+            foreach(var attendee in Attendances.Select(a=> a.Attendee))
+            {
+                attendee.Notify(notiffication);
             }
         }
     }

@@ -123,13 +123,16 @@ namespace SongHub.Controllers
                 viewModel.Genres = _context.Genres.ToList();
                 return View("GigForm", viewModel); //if not valid, the page will be displayed with valid messages
             }
-            var userId = User.Identity.GetUserId();
+            var userId = User.Identity.GetUserId();            
 
-            var gig = _context.Gigs.Single(g => g.Id == viewModel.Id && g.ArtistId == userId);
-            gig.Venue = viewModel.Venue;
-            gig.DateTime = viewModel.GetDateTime();
-            gig.GenreId = viewModel.Genre;
 
+            var gig = _context.Gigs
+                .Include(g => g.Attendances.Select(a => a.Attendee)) // In order to remove getting list of attendees
+                .Single(g => g.Id == viewModel.Id && g.ArtistId == userId);
+
+            gig.Modify(viewModel.GetDateTime(), viewModel.Venue, viewModel.Genre);
+
+            
             _context.SaveChanges();
 
             return RedirectToAction("Mine", "Gigs");
