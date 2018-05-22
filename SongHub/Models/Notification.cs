@@ -17,6 +17,11 @@ namespace SongHub.Models
         [Required]
         public Gig Gig { get; private set; }
 
+        public Notification()
+        {
+
+        }
+
         private Notification(NotificationType type, Gig gig)
         {
             Type = type;
