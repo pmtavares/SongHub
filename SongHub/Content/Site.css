@@ -56,6 +56,16 @@ textarea {
     border-top-color: #fff;
     border-bottom-color: #fff;
 }
+.navbar-inverse .notifications {
+    position: relative;
+}
+.navbar-inverse .notifications .badge {
+    position: absolute;
+    top: 5px;
+    right: -1px;
+    background: #d40b0b;
+}
+
 .form-group{
     margin-bottom: 20px;
 }
