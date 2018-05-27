@@ -52,6 +52,12 @@ namespace SongHub.Controllers
             return View("Gigs", viewModel);
         }
 
+        [HttpPost]
+        public ActionResult Search(HomeViewModel viewModel)
+        {
+            return RedirectToAction("Index", "Home", new { query = viewModel.SearchTerm});
+        }
+
         [Authorize]
         public ActionResult Create()
         {

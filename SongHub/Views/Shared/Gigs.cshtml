@@ -3,8 +3,21 @@
     ViewBag.Title = "Home Page";
 }
 <h2>@Model.Heading</h2>
+@using (Html.BeginForm("Search", "Gigs"))
+{
+    <div class="form-group">
+        <div class="input-group" id="searchGigs">
+            @Html.TextBoxFor(m => m.SearchTerm, new { @class = "form-control", placeholder="Filter here" })
+            <span class="input-group-addon">
+                <i class="glyphicon glyphicon-search"></i>
+            </span>
+        </div>
+    </div>
+}
+
+
 <ul class="gigs voffset4">
-    @foreach(var gig in Model.UpcommingGigs)
+    @foreach (var gig in Model.UpcommingGigs)
     {
         <li>
             <div class="date">
@@ -19,7 +32,7 @@
                 <span class="artist">
                     @gig.Artist.Name 
                     
-                    @if(gig.IsCanceled)
+                    @if (gig.IsCanceled)
                     {
                         <span class="label label-warning">Canceled</span>
                     }
