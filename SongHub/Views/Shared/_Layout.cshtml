@@ -41,12 +41,36 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
     <script type="text/x-template" id="notifications-template">
-        <ul>
+        <ul class="notifications">
             <% 
                 _.each(notifications, function(notification){
-                    if(notification.type == 1){ %>
-                        <li><%= notification.gig.artist.name %> has canceled the gig at <%= notification.gig.venue %>  at <%= notification.gig.dateTime %></li>
-                    <%}     
+                oldDateValue = [];
+                newDateValue = [];
+                currentDate = [];
+                    if(notification.type == 1){ 
+                    newDateValue.push(moment(notification.gig.dateTime).format("D MMM HH:mm"));
+                    %>
+                        <li>
+                            <span class="highlight"><%= notification.gig.artist.name %></span> 
+                            has canceled the gig at <%= notification.gig.venue %>  
+                            at <%= newDateValue.join('/') %> 
+                        </li>
+                    <%}    
+                    else if(notification.type == 2){ 
+                    newDateValue.push(moment(notification.dateTime).format("D MMM HH:mm"));
+                    oldDateValue.push(moment(notification.originalDateTime).format("D MMM HH:mm"));
+                    %>
+                        <li><span class="highlight"><%= notification.gig.artist.name %></span> has changed is gig  
+                            at <%= notification.gig.venue %>  from <%= oldDateValue.join('/') %>)
+                            to  <%= newDateValue.join('/') %>
+                        </li>
+                    <%}
+                    else if(notification.type == 3){ %>
+                    <li>
+                        <span class="highlight"><%= notification.gig.artist.name %></span> has created a gig
+                        to <%= notification.gig.venue %> for <%= notification.dateTime %>
+                    </li>
+                    <%}            
             
                 })
             
@@ -56,6 +80,10 @@
     <script>
         $().ready(function () {
             $.getJSON("/api/notifications", function (notifications) {
+                if (notifications.length == 0) {
+                    return;
+                }
+
                 $(".js-notifications-count")
                     .text(notifications.length)
                     .removeClass("hide")
@@ -68,7 +96,8 @@
                         var compiled = _.template($("#notifications-template").html());
                         return compiled({ notifications: notifications });
                     },
-                    placement: "bottom"
+                    placement: "bottom",
+                    template: '<div class="popover popover-notifications" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
                 });
             });
 
