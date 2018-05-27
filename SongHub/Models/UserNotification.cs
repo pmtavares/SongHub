@@ -21,7 +21,7 @@ namespace SongHub.Models
 
         public Notification Notification { get; private set; }
 
-        public bool IsReady { get; set; }
+        public bool IsReady { get; private set; }
 
         protected UserNotification()
         {
@@ -31,6 +31,11 @@ namespace SongHub.Models
         {
             User = user ?? throw new ArgumentNullException("User");
             Notification = notification ?? throw new ArgumentNullException("Notification");
+        }
+
+        public void Read()
+        {
+            IsReady = true;
         }
     }
 }
